@@ -15,6 +15,10 @@
 <a href="https://discord.com/oauth2/authorize?client_id=1488227820097507588&permissions=4503876652886080&integration_type=0&scope=bot+applications.commands">👉 Invite Bot 👈</a>
 </p>
 
+## Preview
+
+<img width="1038" height="772" alt="Screenshot 2026-03-31 at 2 08 32 AM" src="https://github.com/user-attachments/assets/db745aa4-4d39-4d59-b542-b56e6769ddc1" />
+
 ## Features
 
 - Search movies and TV shows via TMDB
