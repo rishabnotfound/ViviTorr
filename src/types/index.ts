@@ -82,6 +82,7 @@ export interface TorrentSession {
     currentPage: number;
     title: string;
     posterUrl: string | null;
+    requestedBy: string;
 }
 
 export type ContentType = 'movie' | 'tv';

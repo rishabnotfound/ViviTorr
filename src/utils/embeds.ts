@@ -124,18 +124,21 @@ export function createTorrentsEmbed(
     currentPage: number,
     totalPages: number,
     totalResults: number,
-    posterUrl: string | null
+    posterUrl: string | null,
+    requestedBy: string
 ): EmbedBuilder {
     const pageStart = currentPage * PAGINATION.ITEMS_PER_PAGE;
     const pageEnd = Math.min(pageStart + PAGINATION.ITEMS_PER_PAGE, torrents.length);
     const pageTorrents = torrents.slice(pageStart, pageEnd);
 
+    const description = `Requested by <@${requestedBy}>\n\n${formatTorrentList(pageTorrents, pageStart)}`;
+
     const embed = new EmbedBuilder()
         .setColor(COLORS.PRIMARY)
         .setAuthor({ name: 'ViviTorr • Torrent Search' })
         .setTitle(title)
-        .setDescription(formatTorrentList(pageTorrents, pageStart))
-        .setFooter({ text: `Page ${currentPage + 1}/${totalPages} • ${totalResults} results • Sorted by seeders • Click 🧲 to copy magnet` });
+        .setDescription(description)
+        .setFooter({ text: `Page ${currentPage + 1}/${totalPages} • ${totalResults} results • Use /search to find torrents` });
 
     if (posterUrl) {
         embed.setThumbnail(posterUrl);
@@ -192,6 +195,11 @@ export function createCreditsEmbed(): EmbedBuilder {
                 name: '⭐ Support',
                 value: 'Star the repo if you like it!',
                 inline: true
+            },
+            {
+                name: '⚠️ Disclaimer',
+                value: 'ViviTorr does not host, store, or distribute any torrents. We simply aggregate publicly available information from third-party indexers.',
+                inline: false
             }
         )
         .setFooter({ text: BOT_FOOTER })
@@ -202,7 +210,7 @@ export function createHelpEmbed(): EmbedBuilder {
     return new EmbedBuilder()
         .setColor(COLORS.PRIMARY)
         .setTitle('ViviTorr Commands')
-        .setDescription('Search torrents for movies and TV shows.')
+        .setDescription('Search torrents for movies and TV shows.\n\n*We do not host or store any content. ViviTorr only aggregates publicly available data from third-party sources.*')
         .addFields(
             {
                 name: '/search',

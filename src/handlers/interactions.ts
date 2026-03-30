@@ -225,22 +225,25 @@ async function sendPublicTorrentResults(
     const currentPage = 0;
     const pageTorrents = torrents.slice(0, PAGINATION.ITEMS_PER_PAGE);
 
-    sessions.setTorrentSession(interaction.user.id, {
+    const requestedBy = interaction.user.id;
+
+    sessions.setTorrentSession(requestedBy, {
         torrents,
         pages: chunkArray(torrents, PAGINATION.ITEMS_PER_PAGE),
         currentPage,
         title,
-        posterUrl
+        posterUrl,
+        requestedBy
     });
 
-    const magnetButtonRows = createMagnetButtons(pageTorrents, currentPage, interaction.user.id);
+    const magnetButtonRows = createMagnetButtons(pageTorrents, currentPage, requestedBy);
 
     // Send as public message (not ephemeral)
     await interaction.followUp({
-        embeds: [createTorrentsEmbed(title, torrents, currentPage, totalPages, torrents.length, posterUrl)],
+        embeds: [createTorrentsEmbed(title, torrents, currentPage, totalPages, torrents.length, posterUrl, requestedBy)],
         components: [
             ...magnetButtonRows,
-            createPaginationButtons(interaction.user.id, currentPage, totalPages)
+            createPaginationButtons(requestedBy, currentPage, totalPages)
         ]
     });
 }
@@ -314,7 +317,8 @@ async function handlePaginationButton(interaction: ButtonInteraction): Promise<v
             session.currentPage,
             totalPages,
             session.torrents.length,
-            session.posterUrl
+            session.posterUrl,
+            session.requestedBy
         )],
         components: [
             ...magnetButtonRows,
