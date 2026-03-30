@@ -19,7 +19,8 @@ import {
     createErrorEmbed,
     createSeasonSelectEmbed,
     createEpisodeSelectEmbed,
-    createCreditsEmbed
+    createCreditsEmbed,
+    createHelpEmbed
 } from '../utils/embeds.js';
 import {
     createTypeSelectButtons,
@@ -44,6 +45,13 @@ async function handleSearchCommand(interaction: ChatInputCommandInteraction): Pr
 async function handleCreditsCommand(interaction: ChatInputCommandInteraction): Promise<void> {
     await interaction.reply({
         embeds: [createCreditsEmbed()]
+    });
+}
+
+async function handleHelpCommand(interaction: ChatInputCommandInteraction): Promise<void> {
+    await interaction.reply({
+        embeds: [createHelpEmbed()],
+        flags: MessageFlags.Ephemeral
     });
 }
 
@@ -331,6 +339,8 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
                 await handleSearchCommand(interaction);
             } else if (interaction.commandName === 'credits') {
                 await handleCreditsCommand(interaction);
+            } else if (interaction.commandName === 'help') {
+                await handleHelpCommand(interaction);
             }
             return;
         }

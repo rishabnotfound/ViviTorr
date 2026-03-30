@@ -160,7 +160,7 @@ export function createCreditsEmbed(): EmbedBuilder {
         .addFields(
             {
                 name: '🫩 Creator & Developer',
-                value: '[rishabnotfound](https://github.com/rishabnotfound)',
+                value: '<@1141729666160402565> (10/10 btw)',
                 inline: true
             },
             {
@@ -191,4 +191,29 @@ export function createCreditsEmbed(): EmbedBuilder {
         )
         .setFooter({ text: BOT_FOOTER })
         .setTimestamp();
+}
+
+export function createHelpEmbed(): EmbedBuilder {
+    return new EmbedBuilder()
+        .setColor(COLORS.PRIMARY)
+        .setTitle('ViviTorr Commands')
+        .setDescription('Search torrents for movies and TV shows.')
+        .addFields(
+            {
+                name: '/search',
+                value: 'Search for movies or TV shows and get magnet links',
+                inline: false
+            },
+            {
+                name: '/credits',
+                value: 'View bot info, credits, and data sources',
+                inline: false
+            },
+            {
+                name: '/help',
+                value: 'Show this help message',
+                inline: false
+            }
+        )
+        .setFooter({ text: BOT_FOOTER });
 }

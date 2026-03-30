@@ -1,8 +1,19 @@
-# ViviTorr
+<p align="center">
+      <img
+        src="./public/test.png"
+        width="190"
+        height="250"
+      />
+    </p>
 
-A Discord bot for searching torrents. Get magnet links with size, seeders, and quality info.
+# <p align="center">ViviTorr</p>
 
-[**Invite Bot**](https://discord.com/oauth2/authorize?client_id=1488227820097507588&permissions=4503876652886080&integration_type=0&scope=bot+applications.commands)
+
+<p align="center">
+  A Discord bot for searching torrents. Get magnet links with size, seeders, and quality info.
+  <br />
+<a href="https://discord.com/oauth2/authorize?client_id=1488227820097507588&permissions=4503876652886080&integration_type=0&scope=bot+applications.commands">👉 Invite Bot 👈</a>
+</p>
 
 ## Features
 
@@ -38,6 +49,7 @@ A Discord bot for searching torrents. Get magnet links with size, seeders, and q
 |---------|-------------|
 | `/search` | Search for movies or TV shows |
 | `/credits` | View bot info and credits |
+| `/help` | Show all commands |
 
 ## Workflow
 
