@@ -164,6 +164,11 @@ export function createCreditsEmbed(): EmbedBuilder {
                 inline: true
             },
             {
+                name: '🤯 Inspiration & Helper',
+                value: '<@712521210302300161> (likes uni cat)',
+                inline: true
+            },
+            {
                 name: '📚 Built with',
                 value: '• TypeScript\n• Discord.js\n• Node.js',
                 inline: true
