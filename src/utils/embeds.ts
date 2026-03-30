@@ -159,7 +159,7 @@ export function createCreditsEmbed(): EmbedBuilder {
     return new EmbedBuilder()
         .setColor(COLORS.PRIMARY)
         .setTitle('ViviTorr')
-        .setDescription('A simple Discord bot that helps you search torrents quickly. Just type a command and it shows size, seeders, and the magnet link.')
+        .setDescription('A simple bot that helps you search torrents for content quickly. Just type ``/search`` command to begin')
         .addFields(
             {
                 name: '🫩 Creator & Developer',
