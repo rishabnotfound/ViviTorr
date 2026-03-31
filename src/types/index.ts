@@ -58,6 +58,7 @@ export interface TMDBDetails {
     title?: string;
     name?: string;
     poster_path?: string | null;
+    release_date?: string;
     number_of_seasons?: number;
     seasons?: SeasonInfo[];
     external_ids?: {
