@@ -2,7 +2,7 @@ import Redis from 'ioredis';
 
 // Cache TTLs in seconds
 export const CACHE_TTL = {
-    TMDB: 60 * 60,           // 1 hour
+    TMDB: 2 * 60 * 60,           // 2 hour
     TORRENTS: 2 * 60 * 60,   // 2 hours
     STATIC: 3 * 60 * 60      // 3 hours (help, credits)
 } as const;

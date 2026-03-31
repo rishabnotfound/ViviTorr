@@ -35,23 +35,24 @@ import { sessions } from '../utils/session.js';
 import type { ContentType, TorrentResult } from '../types/index.js';
 
 async function handleSearchCommand(interaction: ChatInputCommandInteraction): Promise<void> {
-    await interaction.reply({
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.editReply({
         embeds: [createTypeSelectEmbed()],
-        components: [createTypeSelectButtons()],
-        flags: MessageFlags.Ephemeral
+        components: [createTypeSelectButtons()]
     });
 }
 
 async function handleCreditsCommand(interaction: ChatInputCommandInteraction): Promise<void> {
-    await interaction.reply({
+    await interaction.deferReply();
+    await interaction.editReply({
         embeds: [createCreditsEmbed()]
     });
 }
 
 async function handleHelpCommand(interaction: ChatInputCommandInteraction): Promise<void> {
-    await interaction.reply({
-        embeds: [createHelpEmbed()],
-        flags: MessageFlags.Ephemeral
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.editReply({
+        embeds: [createHelpEmbed()]
     });
 }
 
@@ -82,9 +83,9 @@ async function handleSearchModal(interaction: ModalSubmitInteraction): Promise<v
 }
 
 async function handleContentSelect(interaction: StringSelectMenuInteraction): Promise<void> {
-    const [type, tmdbId] = interaction.values[0].split('_') as [ContentType, string];
-
     await interaction.deferUpdate();
+
+    const [type, tmdbId] = interaction.values[0].split('_') as [ContentType, string];
 
     const details = await getDetails(tmdbId, type);
     const imdbId = details.external_ids?.imdb_id;
@@ -140,10 +141,12 @@ async function handleContentSelect(interaction: StringSelectMenuInteraction): Pr
 }
 
 async function handleSeasonSelect(interaction: StringSelectMenuInteraction): Promise<void> {
+    await interaction.deferUpdate();
+
     const session = sessions.getUserSession(interaction.user.id);
 
     if (!session) {
-        await interaction.reply({
+        await interaction.followUp({
             content: 'Session expired. Please search again.',
             flags: MessageFlags.Ephemeral
         });
@@ -152,8 +155,6 @@ async function handleSeasonSelect(interaction: StringSelectMenuInteraction): Pro
 
     // Parse: season_<seasonNum>
     const seasonNumber = parseInt(interaction.values[0].split('_')[1], 10);
-
-    await interaction.deferUpdate();
 
     // Fetch episode details with titles
     const episodes = await getSeasonEpisodes(session.tmdbId, seasonNumber);
@@ -171,10 +172,12 @@ async function handleSeasonSelect(interaction: StringSelectMenuInteraction): Pro
 }
 
 async function handleEpisodeSelect(interaction: StringSelectMenuInteraction): Promise<void> {
+    await interaction.deferUpdate();
+
     const session = sessions.getUserSession(interaction.user.id);
 
     if (!session) {
-        await interaction.reply({
+        await interaction.followUp({
             content: 'Session expired. Please search again.',
             flags: MessageFlags.Ephemeral
         });
@@ -191,8 +194,6 @@ async function handleEpisodeSelect(interaction: StringSelectMenuInteraction): Pr
     const episodeTitle = episode?.name ? ` "${episode.name}"` : '';
 
     const formattedTitle = `${session.title} S${seasonNumber.padStart(2, '0')}E${episodeNumber.padStart(2, '0')}${episodeTitle}`;
-
-    await interaction.deferUpdate();
 
     await interaction.editReply({
         embeds: [createLoadingEmbed(formattedTitle, session.posterUrl)],
@@ -249,6 +250,8 @@ async function sendPublicTorrentResults(
 }
 
 async function handleMagnetButton(interaction: ButtonInteraction): Promise<void> {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
     const parts = interaction.customId.split('_');
     const index = parseInt(parts[1], 10);
     const page = parseInt(parts[2], 10);
@@ -257,9 +260,8 @@ async function handleMagnetButton(interaction: ButtonInteraction): Promise<void>
     const session = sessions.getTorrentSession(visibleToUserId);
 
     if (!session) {
-        await interaction.reply({
-            content: 'Session expired. Please search again.',
-            flags: MessageFlags.Ephemeral
+        await interaction.editReply({
+            content: 'Session expired. Please search again.'
         });
         return;
     }
@@ -267,36 +269,37 @@ async function handleMagnetButton(interaction: ButtonInteraction): Promise<void>
     const torrent = session.pages[page]?.[index];
 
     if (!torrent) {
-        await interaction.reply({
-            content: 'Torrent not found.',
-            flags: MessageFlags.Ephemeral
+        await interaction.editReply({
+            content: 'Torrent not found.'
         });
         return;
     }
 
     // Magnet link response is ephemeral (only visible to the user who clicked)
-    await interaction.reply({
-        content: `**${torrent.title}**\n\n📊 Quality: \`${torrent.quality}\`\n👤 Seeders: \`${torrent.seeders}\`\n💾 Size: \`${torrent.size}\`\n🔗 Source: ${torrent.source}\n\n**Magnet Link:**\n\`\`\`\n${torrent.magnetURI}\n\`\`\``,
-        flags: MessageFlags.Ephemeral
+    await interaction.editReply({
+        content: `**${torrent.title}**\n\n📊 Quality: \`${torrent.quality}\`\n👤 Seeders: \`${torrent.seeders}\`\n💾 Size: \`${torrent.size}\`\n🔗 Source: ${torrent.source}\n\n**Magnet Link:**\n\`\`\`\n${torrent.magnetURI}\n\`\`\``
     });
 }
 
 async function handlePaginationButton(interaction: ButtonInteraction): Promise<void> {
     const visibleToUserId = interaction.customId.split('_')[2];
-    const session = sessions.getTorrentSession(visibleToUserId);
-
-    if (!session) {
-        await interaction.reply({
-            content: 'Session expired. Please search again.',
-            flags: MessageFlags.Ephemeral
-        });
-        return;
-    }
 
     // Only allow the original user to paginate
     if (interaction.user.id !== visibleToUserId) {
         await interaction.reply({
             content: 'Only the person who searched can navigate pages.',
+            flags: MessageFlags.Ephemeral
+        });
+        return;
+    }
+
+    await interaction.deferUpdate();
+
+    const session = sessions.getTorrentSession(visibleToUserId);
+
+    if (!session) {
+        await interaction.followUp({
+            content: 'Session expired. Please search again.',
             flags: MessageFlags.Ephemeral
         });
         return;
@@ -310,7 +313,7 @@ async function handlePaginationButton(interaction: ButtonInteraction): Promise<v
 
     const magnetButtonRows = createMagnetButtons(pageTorrents, session.currentPage, visibleToUserId);
 
-    await interaction.update({
+    await interaction.editReply({
         embeds: [createTorrentsEmbed(
             session.title,
             session.torrents,
