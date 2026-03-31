@@ -12,16 +12,30 @@ interface TMDBSeasonResponse {
 }
 
 // Retry wrapper for fetch with exponential backoff
-async function fetchWithRetry(url: string, retries = 3, delay = 500): Promise<Response> {
+async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<Response> {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-            const response = await fetch(url);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+            const response = await fetch(url, {
+                signal: controller.signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'User-Agent': 'ViviTorr/1.0'
+                }
+            });
+
+            clearTimeout(timeoutId);
             return response;
         } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+            console.log(`TMDB fetch attempt ${attempt}/${retries} failed: ${errorMsg}`);
+
             if (attempt === retries) {
                 throw error;
             }
-            console.log(`TMDB fetch attempt ${attempt} failed, retrying in ${delay}ms...`);
+
             await new Promise(resolve => setTimeout(resolve, delay));
             delay *= 2; // Exponential backoff
         }
@@ -65,15 +79,17 @@ export async function getDetails(tmdbId: string, type: ContentType): Promise<TMD
 }
 
 export async function getSeasonEpisodes(tmdbId: string, seasonNumber: number): Promise<EpisodeInfo[]> {
-    const response = await fetchWithRetry(
-        `${TMDB.BASE_URL}/tv/${tmdbId}/season/${seasonNumber}?api_key=${env.TMDB_API_KEY}&language=en-US`
-    );
+    const url = `${TMDB.BASE_URL}/tv/${tmdbId}/season/${seasonNumber}?api_key=${env.TMDB_API_KEY}&language=en-US`;
+    console.log(`Fetching season episodes: tv/${tmdbId}/season/${seasonNumber}`);
+
+    const response = await fetchWithRetry(url);
 
     if (!response.ok) {
         throw new Error(`TMDB season details fetch failed: ${response.statusText}`);
     }
 
     const data = await response.json() as TMDBSeasonResponse;
+    console.log(`Got ${data.episodes?.length ?? 0} episodes`);
     return data.episodes ?? [];
 }
 
