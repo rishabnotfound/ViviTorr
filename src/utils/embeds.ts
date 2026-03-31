@@ -155,6 +155,20 @@ export function createErrorEmbed(message: string): EmbedBuilder {
         .setFooter({ text: BOT_FOOTER });
 }
 
+export function createNotReleasedEmbed(title: string, releaseDate: string, posterUrl: string | null): EmbedBuilder {
+    const embed = new EmbedBuilder()
+        .setColor(COLORS.WARNING)
+        .setTitle('Not Released Yet')
+        .setDescription(`**${title}** hasn't been released yet.\n\n📅 **Release Date:** ${releaseDate}\n\nTorrents won't be available until after the movie is out.`)
+        .setFooter({ text: BOT_FOOTER });
+
+    if (posterUrl) {
+        embed.setThumbnail(posterUrl);
+    }
+
+    return embed;
+}
+
 export function createCreditsEmbed(): EmbedBuilder {
     return new EmbedBuilder()
         .setColor(COLORS.PRIMARY)

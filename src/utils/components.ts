@@ -138,6 +138,8 @@ export function createMagnetButtons(
 ): ActionRowBuilder<ButtonBuilder>[] {
     const rows: ActionRowBuilder<ButtonBuilder>[] = [];
     const buttonsPerRow = 5;
+    const itemsPerPage = 10;
+    const pageOffset = page * itemsPerPage;
 
     // Create up to 2 rows of buttons (10 total for 10 items per page)
     for (let row = 0; row < 2; row++) {
@@ -149,7 +151,7 @@ export function createMagnetButtons(
         const buttons = rowTorrents.map((_, i) =>
             new ButtonBuilder()
                 .setCustomId(`magnet_${startIdx + i}_${page}_${visibleToUserId}`)
-                .setLabel(`#${startIdx + i + 1}`)
+                .setLabel(`#${pageOffset + startIdx + i + 1}`)
                 .setStyle(ButtonStyle.Secondary)
                 .setEmoji('🧲')
         );

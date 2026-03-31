@@ -17,6 +17,7 @@ import {
     createNoTorrentsEmbed,
     createTorrentsEmbed,
     createErrorEmbed,
+    createNotReleasedEmbed,
     createSeasonSelectEmbed,
     createEpisodeSelectEmbed,
     createCreditsEmbed,
@@ -125,6 +126,26 @@ async function handleContentSelect(interaction: StringSelectMenuInteraction): Pr
             components: [createSeasonSelect(seasons)]
         });
         return;
+    }
+
+    // For movies, check if released yet
+    if (details.release_date) {
+        const releaseDate = new Date(details.release_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (releaseDate > today) {
+            const formattedDate = releaseDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            await interaction.editReply({
+                embeds: [createNotReleasedEmbed(title, formattedDate, posterUrl)],
+                components: []
+            });
+            return;
+        }
     }
 
     // For movies, fetch torrents directly
