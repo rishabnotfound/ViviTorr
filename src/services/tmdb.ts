@@ -11,10 +11,28 @@ interface TMDBSeasonResponse {
     episodes: EpisodeInfo[];
 }
 
+// Retry wrapper for fetch with exponential backoff
+async function fetchWithRetry(url: string, retries = 3, delay = 500): Promise<Response> {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const response = await fetch(url);
+            return response;
+        } catch (error) {
+            if (attempt === retries) {
+                throw error;
+            }
+            console.log(`TMDB fetch attempt ${attempt} failed, retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
+        }
+    }
+    throw new Error('All retry attempts failed');
+}
+
 export async function searchContent(query: string, type: ContentType): Promise<TMDBSearchResult[]> {
     const endpoint = type === 'movie' ? 'search/movie' : 'search/tv';
 
-    const response = await fetch(
+    const response = await fetchWithRetry(
         `${TMDB.BASE_URL}/${endpoint}?api_key=${env.TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US&include_adult=false`
     );
 
@@ -35,7 +53,7 @@ export async function searchContent(query: string, type: ContentType): Promise<T
 export async function getDetails(tmdbId: string, type: ContentType): Promise<TMDBDetails> {
     const endpoint = type === 'movie' ? `movie/${tmdbId}` : `tv/${tmdbId}`;
 
-    const response = await fetch(
+    const response = await fetchWithRetry(
         `${TMDB.BASE_URL}/${endpoint}?api_key=${env.TMDB_API_KEY}&language=en-US&append_to_response=external_ids`
     );
 
@@ -47,7 +65,7 @@ export async function getDetails(tmdbId: string, type: ContentType): Promise<TMD
 }
 
 export async function getSeasonEpisodes(tmdbId: string, seasonNumber: number): Promise<EpisodeInfo[]> {
-    const response = await fetch(
+    const response = await fetchWithRetry(
         `${TMDB.BASE_URL}/tv/${tmdbId}/season/${seasonNumber}?api_key=${env.TMDB_API_KEY}&language=en-US`
     );
 
