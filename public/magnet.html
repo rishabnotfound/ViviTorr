@@ -237,7 +237,7 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const infoHash = params.get('hash');
+        const magnet = params.get('magnet');
         const title = params.get('title') || 'Torrent';
         const quality = params.get('q') || '';
         const size = params.get('s') || '';
@@ -246,33 +246,8 @@
         const content = document.getElementById('content');
         const toast = document.getElementById('toast');
 
-        // Trackers will be fetched
-        let trackers = [];
-        let magnet = '';
-
-        async function fetchTrackers() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt');
-                const text = await response.text();
-                trackers = text.split('\n').filter(t => t.trim() !== '');
-            } catch (e) {
-                // Fallback trackers if fetch fails
-                trackers = [
-                    'udp://tracker.opentrackr.org:1337/announce',
-                    'udp://open.stealth.si:80/announce',
-                    'udp://tracker.torrent.eu.org:451/announce',
-                    'udp://exodus.desync.com:6969/announce'
-                ];
-            }
-        }
-
-        function buildMagnet() {
-            const trackerParams = trackers.map(t => `tr=${encodeURIComponent(t)}`).join('&');
-            return `magnet:?xt=urn:btih:${infoHash}&${trackerParams}`;
-        }
-
-        async function init() {
-            if (!infoHash) {
+        function init() {
+            if (!magnet) {
                 content.innerHTML = `
                     <div class="error">
                         <h2>No Magnet Link</h2>
@@ -281,15 +256,6 @@
                 `;
                 return;
             }
-
-            // Show loading state
-            content.innerHTML = `
-                <div class="card-title">Loading...</div>
-                <div class="card-subtitle">Fetching trackers...</div>
-            `;
-
-            await fetchTrackers();
-            magnet = buildMagnet();
 
             let infoHtml = '';
             if (quality || size || seeders) {
