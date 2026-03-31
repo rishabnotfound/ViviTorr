@@ -93,8 +93,8 @@ export function createSeasonSelect(seasons: SeasonInfo[]): ActionRowBuilder<Stri
     return new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
 }
 
-export function createEpisodeSelect(episodes: EpisodeInfo[], seasonNumber: number): ActionRowBuilder<StringSelectMenuBuilder>[] {
-    const rows: ActionRowBuilder<StringSelectMenuBuilder>[] = [];
+export function createEpisodeSelect(episodes: EpisodeInfo[], seasonNumber: number): ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>[] {
+    const rows: ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>[] = [];
 
     // Discord limits: 25 options per select menu
     // If more than 25 episodes, create multiple select menus
@@ -128,7 +128,16 @@ export function createEpisodeSelect(episodes: EpisodeInfo[], seasonNumber: numbe
         rows.push(new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu));
     });
 
-    return rows.slice(0, 4); // Discord max 5 rows, leave 1 for pagination if needed
+    // Add back button row
+    const backButton = new ButtonBuilder()
+        .setCustomId('back_to_seasons')
+        .setLabel('Back to Seasons')
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji('◀️');
+
+    rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(backButton));
+
+    return rows.slice(0, 5); // Discord max 5 rows
 }
 
 export function createMagnetButtons(

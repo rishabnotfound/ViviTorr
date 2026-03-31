@@ -361,6 +361,26 @@ async function handlePaginationButton(interaction: ButtonInteraction): Promise<v
     });
 }
 
+async function handleBackToSeasons(interaction: ButtonInteraction): Promise<void> {
+    await interaction.deferUpdate();
+
+    const session = sessions.getUserSession(interaction.user.id);
+
+    if (!session) {
+        await interaction.followUp({
+            content: 'Session expired. Please search again.',
+            flags: MessageFlags.Ephemeral
+        });
+        return;
+    }
+
+    // Go back to season selection
+    await interaction.editReply({
+        embeds: [createSeasonSelectEmbed(session.title, session.posterUrl, session.seasons?.length || 0)],
+        components: [createSeasonSelect(session.seasons || [])]
+    });
+}
+
 function chunkArray<T>(array: T[], size: number): T[][] {
     const chunks: T[][] = [];
     for (let i = 0; i < array.length; i += size) {
@@ -393,6 +413,8 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
                 await handleMagnetButton(interaction);
             } else if (customId.startsWith('page_')) {
                 await handlePaginationButton(interaction);
+            } else if (customId === 'back_to_seasons') {
+                await handleBackToSeasons(interaction);
             }
             return;
         }
