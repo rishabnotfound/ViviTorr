@@ -296,9 +296,19 @@ async function handleMagnetButton(interaction: ButtonInteraction): Promise<void>
         return;
     }
 
+    // Build mobile-friendly copy link
+    const magnetParams = new URLSearchParams({
+        torr: torrent.magnetURI,
+        title: torrent.title,
+        q: torrent.quality,
+        s: torrent.size,
+        p: torrent.seeders.toString()
+    });
+    const copyLink = `https://vivitorr.vercel.app/magnet.html?${magnetParams.toString()}`;
+
     // Magnet link response is ephemeral (only visible to the user who clicked)
     await interaction.editReply({
-        content: `**${torrent.title}**\n\n📊 Quality: \`${torrent.quality}\`\n👤 Seeders: \`${torrent.seeders}\`\n💾 Size: \`${torrent.size}\`\n🔗 Source: ${torrent.source}\n\n**Magnet Link:**\n\`\`\`\n${torrent.magnetURI}\n\`\`\``
+        content: `**${torrent.title}**\n\n📊 Quality: \`${torrent.quality}\`\n👤 Seeders: \`${torrent.seeders}\`\n💾 Size: \`${torrent.size}\`\n🔗 Source: ${torrent.source}\n\n**Magnet Link:**\n\`\`\`\n${torrent.magnetURI}\n\`\`\`\n📱 [Copy on Mobile](${copyLink})`
     });
 }
 
