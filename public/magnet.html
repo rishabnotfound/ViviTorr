@@ -237,7 +237,7 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const magnetEncoded = params.get('torr');
+        const infoHash = params.get('hash');
         const title = params.get('title') || 'Torrent';
         const quality = params.get('q') || '';
         const size = params.get('s') || '';
@@ -246,15 +246,50 @@
         const content = document.getElementById('content');
         const toast = document.getElementById('toast');
 
-        if (!magnetEncoded) {
+        // Trackers will be fetched
+        let trackers = [];
+        let magnet = '';
+
+        async function fetchTrackers() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt');
+                const text = await response.text();
+                trackers = text.split('\n').filter(t => t.trim() !== '');
+            } catch (e) {
+                // Fallback trackers if fetch fails
+                trackers = [
+                    'udp://tracker.opentrackr.org:1337/announce',
+                    'udp://open.stealth.si:80/announce',
+                    'udp://tracker.torrent.eu.org:451/announce',
+                    'udp://exodus.desync.com:6969/announce'
+                ];
+            }
+        }
+
+        function buildMagnet() {
+            const trackerParams = trackers.map(t => `tr=${encodeURIComponent(t)}`).join('&');
+            return `magnet:?xt=urn:btih:${infoHash}&${trackerParams}`;
+        }
+
+        async function init() {
+            if (!infoHash) {
+                content.innerHTML = `
+                    <div class="error">
+                        <h2>No Magnet Link</h2>
+                        <p>No magnet link was provided. Use /search on Discord to get magnet links.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show loading state
             content.innerHTML = `
-                <div class="error">
-                    <h2>No Magnet Link</h2>
-                    <p>No magnet link was provided. Use /search on Discord to get magnet links.</p>
-                </div>
+                <div class="card-title">Loading...</div>
+                <div class="card-subtitle">Fetching trackers...</div>
             `;
-        } else {
-            const magnet = decodeURIComponent(magnetEncoded);
+
+            await fetchTrackers();
+            magnet = buildMagnet();
 
             let infoHtml = '';
             if (quality || size || seeders) {
@@ -292,9 +327,10 @@
             `;
         }
 
-        function copyMagnet() {
-            const magnet = decodeURIComponent(magnetEncoded);
+        // Start initialization
+        init();
 
+        function copyMagnet() {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(magnet).then(() => {
                     showToast();

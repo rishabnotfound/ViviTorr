@@ -296,9 +296,13 @@ async function handleMagnetButton(interaction: ButtonInteraction): Promise<void>
         return;
     }
 
-    // Build mobile-friendly copy link
+    // Extract info hash from magnet link
+    const hashMatch = torrent.magnetURI.match(/btih:([a-fA-F0-9]+)/);
+    const infoHash = hashMatch ? hashMatch[1] : '';
+
+    // Build mobile-friendly copy link (only pass hash, page will add trackers)
     const magnetParams = new URLSearchParams({
-        torr: torrent.magnetURI,
+        hash: infoHash,
         title: torrent.title,
         q: torrent.quality,
         s: torrent.size,
