@@ -300,7 +300,7 @@ async function handleMagnetButton(interaction: ButtonInteraction): Promise<void>
     const hashMatch = torrent.magnetURI.match(/btih:([a-fA-F0-9]+)/);
     const infoHash = hashMatch ? hashMatch[1] : '';
 
-    // Build mobile-friendly copy link (only pass hash, page will add trackers)
+    // Build link to magnet page
     const magnetParams = new URLSearchParams({
         hash: infoHash,
         title: torrent.title,
@@ -308,11 +308,11 @@ async function handleMagnetButton(interaction: ButtonInteraction): Promise<void>
         s: torrent.size,
         p: torrent.seeders.toString()
     });
-    const copyLink = `https://vivitorr.vercel.app/magnet.html?${magnetParams.toString()}`;
+    const magnetLink = `https://vivitorr.vercel.app/magnet.html?${magnetParams.toString()}`;
 
     // Magnet link response is ephemeral (only visible to the user who clicked)
     await interaction.editReply({
-        content: `**${torrent.title}**\n\n📊 Quality: \`${torrent.quality}\`\n👤 Seeders: \`${torrent.seeders}\`\n💾 Size: \`${torrent.size}\`\n🔗 Source: ${torrent.source}\n\n**Magnet Link:**\n\`\`\`\n${torrent.magnetURI}\n\`\`\`\n📱 [Copy on Mobile](${copyLink})`
+        content: `**${torrent.title}**\n\n📊 Quality: \`${torrent.quality}\`\n👤 Seeders: \`${torrent.seeders}\`\n💾 Size: \`${torrent.size}\`\n🔗 Source: ${torrent.source}\n\n🧲 **[Get Magnet Link](${magnetLink})**`
     });
 }
 
