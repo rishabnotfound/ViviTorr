@@ -1,5 +1,6 @@
 import { TMDB } from '../config/constants.js';
 import { env } from '../config/env.js';
+import { cache, CACHE_TTL, CACHE_KEYS } from './cache.js';
 import type { TMDBSearchResult, TMDBDetails, ContentType, SeasonInfo, EpisodeInfo } from '../types/index.js';
 
 interface TMDBSearchResponse {
@@ -16,7 +17,7 @@ async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<R
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
 
             const response = await fetch(url, {
                 signal: controller.signal,
@@ -37,13 +38,22 @@ async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<R
             }
 
             await new Promise(resolve => setTimeout(resolve, delay));
-            delay *= 2; // Exponential backoff
+            delay *= 2;
         }
     }
     throw new Error('All retry attempts failed');
 }
 
 export async function searchContent(query: string, type: ContentType): Promise<TMDBSearchResult[]> {
+    const cacheKey = `${CACHE_KEYS.TMDB_SEARCH}:${type}:${query.toLowerCase()}`;
+
+    // Check cache
+    const cached = await cache.get<TMDBSearchResult[]>(cacheKey);
+    if (cached) {
+        console.log(`Cache hit: ${cacheKey}`);
+        return cached;
+    }
+
     const endpoint = type === 'movie' ? 'search/movie' : 'search/tv';
 
     const response = await fetchWithRetry(
@@ -56,15 +66,26 @@ export async function searchContent(query: string, type: ContentType): Promise<T
 
     const data = await response.json() as TMDBSearchResponse;
 
-    // Sort by popularity (higher = more popular/relevant)
     const sorted = (data.results ?? [])
         .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
         .slice(0, 10);
+
+    // Cache result
+    await cache.set(cacheKey, sorted, CACHE_TTL.TMDB);
 
     return sorted;
 }
 
 export async function getDetails(tmdbId: string, type: ContentType): Promise<TMDBDetails> {
+    const cacheKey = `${CACHE_KEYS.TMDB_DETAILS}:${type}:${tmdbId}`;
+
+    // Check cache
+    const cached = await cache.get<TMDBDetails>(cacheKey);
+    if (cached) {
+        console.log(`Cache hit: ${cacheKey}`);
+        return cached;
+    }
+
     const endpoint = type === 'movie' ? `movie/${tmdbId}` : `tv/${tmdbId}`;
 
     const response = await fetchWithRetry(
@@ -75,10 +96,24 @@ export async function getDetails(tmdbId: string, type: ContentType): Promise<TMD
         throw new Error(`TMDB details fetch failed: ${response.statusText}`);
     }
 
-    return response.json() as Promise<TMDBDetails>;
+    const data = await response.json() as TMDBDetails;
+
+    // Cache result
+    await cache.set(cacheKey, data, CACHE_TTL.TMDB);
+
+    return data;
 }
 
 export async function getSeasonEpisodes(tmdbId: string, seasonNumber: number): Promise<EpisodeInfo[]> {
+    const cacheKey = `${CACHE_KEYS.TMDB_SEASON}:${tmdbId}:${seasonNumber}`;
+
+    // Check cache
+    const cached = await cache.get<EpisodeInfo[]>(cacheKey);
+    if (cached) {
+        console.log(`Cache hit: ${cacheKey}`);
+        return cached;
+    }
+
     const url = `${TMDB.BASE_URL}/tv/${tmdbId}/season/${seasonNumber}?api_key=${env.TMDB_API_KEY}&language=en-US`;
     console.log(`Fetching season episodes: tv/${tmdbId}/season/${seasonNumber}`);
 
@@ -89,8 +124,14 @@ export async function getSeasonEpisodes(tmdbId: string, seasonNumber: number): P
     }
 
     const data = await response.json() as TMDBSeasonResponse;
-    console.log(`Got ${data.episodes?.length ?? 0} episodes`);
-    return data.episodes ?? [];
+    const episodes = data.episodes ?? [];
+
+    console.log(`Got ${episodes.length} episodes`);
+
+    // Cache result
+    await cache.set(cacheKey, episodes, CACHE_TTL.TMDB);
+
+    return episodes;
 }
 
 export function getPosterUrl(posterPath: string | null | undefined): string | null {

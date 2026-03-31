@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { env } from './config/env.js';
 import { handleInteraction } from './handlers/interactions.js';
+import { cache } from './services/cache.js';
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
@@ -12,4 +13,7 @@ client.once('clientReady', (readyClient) => {
 
 client.on('interactionCreate', handleInteraction);
 
-client.login(env.DISCORD_TOKEN);
+// Connect to Redis then start bot
+cache.connect().then(() => {
+    client.login(env.DISCORD_TOKEN);
+});

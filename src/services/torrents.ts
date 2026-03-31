@@ -1,6 +1,7 @@
 import { TIMEOUTS } from '../config/constants.js';
 import { getTrackers } from './trackers.js';
 import { addons } from './addons.js';
+import { cache, CACHE_TTL, CACHE_KEYS } from './cache.js';
 import type { AddonConfig, TorrentResult, StreamData } from '../types/index.js';
 
 interface StreamResponse {
@@ -58,6 +59,17 @@ export async function searchTorrents(
     season?: string,
     episode?: string
 ): Promise<TorrentResult[]> {
+    const cacheKey = season
+        ? `${CACHE_KEYS.TORRENTS}:${imdbId}:${season}:${episode}`
+        : `${CACHE_KEYS.TORRENTS}:${imdbId}`;
+
+    // Check cache
+    const cached = await cache.get<TorrentResult[]>(cacheKey);
+    if (cached) {
+        console.log(`Cache hit: ${cacheKey}`);
+        return cached;
+    }
+
     const trackers = await getTrackers();
 
     const results = await Promise.allSettled(
@@ -73,5 +85,12 @@ export async function searchTorrents(
     }
 
     // Sort by seeders descending
-    return torrents.sort((a, b) => b.seeders - a.seeders);
+    const sorted = torrents.sort((a, b) => b.seeders - a.seeders);
+
+    // Cache result (only if we got results)
+    if (sorted.length > 0) {
+        await cache.set(cacheKey, sorted, CACHE_TTL.TORRENTS);
+    }
+
+    return sorted;
 }

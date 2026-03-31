@@ -13,6 +13,8 @@
   A Discord bot for searching torrents. Get magnet links with size, seeders, and quality info.
   <br />
 <a href="https://discord.com/oauth2/authorize?client_id=1488227820097507588&permissions=4503876652886080&integration_type=0&scope=bot+applications.commands">👉 Invite Bot 👈</a>
+  <br />
+<a href="https://vivitorr.vercel.app">🌐 Website</a>
 </p>
 
 ## Preview
@@ -39,7 +41,7 @@
    ```bash
    cp .env.example .env
    ```
-   Edit `.env` with your Discord bot token and client ID.
+   Edit `.env` with your Discord bot token, client ID, and optionally Redis URL for caching.
 
 3. **Deploy & Run**
    ```bash
@@ -72,6 +74,7 @@
 - TypeScript / Discord.js / Node.js
 - TMDB API for metadata
 - Stremio addons for torrents
+- Redis for caching (optional)
 
 ## License
 

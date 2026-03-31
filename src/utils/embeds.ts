@@ -173,7 +173,7 @@ export function createCreditsEmbed(): EmbedBuilder {
             },
             {
                 name: '📚 Built with',
-                value: '• TypeScript\n• Discord.js\n• Node.js',
+                value: '• TypeScript\n• Discord.js\n• Node.js\n• Redis',
                 inline: true
             },
             {
@@ -187,13 +187,13 @@ export function createCreditsEmbed(): EmbedBuilder {
                 inline: false
             },
             {
-                name: '📂 Source Code',
-                value: '[GitHub Repository](https://github.com/rishabnotfound/ViviTorr)',
+                name: '🌐 Website',
+                value: '[vivitorr.vercel.app](https://vivitorr.vercel.app)',
                 inline: true
             },
             {
-                name: '⭐ Support',
-                value: 'Star the repo if you like it!',
+                name: '📂 Source Code',
+                value: '[GitHub Repository](https://github.com/rishabnotfound/ViviTorr)',
                 inline: true
             },
             {
