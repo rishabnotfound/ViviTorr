@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ViviTorr - Magnet Link</title>
     <meta name="theme-color" content="#5DADE2">
     <link rel="icon" href="./logo.png" type="image/png">
@@ -25,16 +25,21 @@
             --success: #2ecc71;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
 
         .bg-gradient {
@@ -54,27 +59,27 @@
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
         }
 
         .logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 32px;
+            gap: 10px;
+            margin-bottom: 20px;
             text-decoration: none;
             color: var(--text);
         }
 
         .logo img {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
         }
 
         .logo span {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
         }
 
@@ -82,14 +87,18 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 24px;
+            padding: 28px;
         }
 
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--primary);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.4;
         }
 
         .card-subtitle {
@@ -98,38 +107,41 @@
             margin-bottom: 20px;
         }
 
+        /* Hide mobile text on desktop, show desktop text */
+        .mobile-text { display: none; }
+        .desktop-text { display: inline; }
+
         .magnet-box {
             background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px;
             margin-bottom: 20px;
             word-break: break-all;
             font-family: 'SF Mono', 'Fira Code', monospace;
             font-size: 0.8rem;
             color: var(--text-muted);
-            max-height: 150px;
+            max-height: 120px;
             overflow-y: auto;
             user-select: all;
+            -webkit-user-select: all;
         }
 
         .buttons {
             display: flex;
             gap: 12px;
-            flex-wrap: wrap;
         }
 
         .btn {
             flex: 1;
-            min-width: 140px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             padding: 14px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 1rem;
             text-decoration: none;
             transition: all 0.2s;
             border: none;
@@ -143,7 +155,6 @@
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: translateY(-2px);
         }
 
         .btn-secondary {
@@ -157,35 +168,33 @@
             background: rgba(93, 173, 226, 0.1);
         }
 
-        .btn-success {
-            background: var(--success);
-            color: #000;
-        }
-
         .error {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
         }
 
         .error h2 {
             color: var(--primary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
 
         .error p {
             color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         .toast {
             position: fixed;
-            bottom: 24px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--success);
             color: #000;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-weight: 500;
+            font-size: 0.9rem;
             opacity: 0;
             transition: all 0.3s;
             z-index: 100;
@@ -197,16 +206,16 @@
         }
 
         .info {
-            margin-top: 16px;
-            padding-top: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
             border-top: 1px solid var(--border);
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
         }
 
         .info-label {
@@ -216,6 +225,98 @@
         .info-value {
             color: var(--text);
             font-weight: 500;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .mobile-text { display: inline; }
+            .desktop-text { display: none; }
+
+            body {
+                padding: 12px;
+            }
+
+            .logo {
+                margin-bottom: 16px;
+            }
+
+            .logo img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .logo span {
+                font-size: 1.1rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card-title {
+                font-size: 1.05rem;
+            }
+
+            .card-subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 16px;
+            }
+
+            .magnet-box {
+                max-height: 100px;
+                font-size: 0.75rem;
+                padding: 14px;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            .info {
+                margin-top: 16px;
+                padding-top: 16px;
+            }
+
+            .info-row {
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-height: 600px) {
+            .logo {
+                margin-bottom: 10px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-title {
+                font-size: 1rem;
+                margin-bottom: 6px;
+            }
+
+            .card-subtitle {
+                margin-bottom: 12px;
+            }
+
+            .magnet-box {
+                max-height: 70px;
+                margin-bottom: 14px;
+                padding: 10px;
+            }
+
+            .info {
+                margin-top: 12px;
+                padding-top: 12px;
+            }
+
+            .info-row {
+                margin-bottom: 6px;
+            }
         }
     </style>
 </head>
@@ -270,7 +371,10 @@
 
             content.innerHTML = `
                 <div class="card-title">${decodeURIComponent(title)}</div>
-                <div class="card-subtitle">Tap and hold to select, or use the copy button</div>
+                <div class="card-subtitle">
+                    <span class="mobile-text">Tap and hold to select, or use the copy button</span>
+                    <span class="desktop-text">Click on text area and press Ctrl+C to copy</span>
+                </div>
                 <div class="magnet-box" id="magnetBox">${magnet}</div>
                 <div class="buttons">
                     <button class="btn btn-primary" onclick="copyMagnet()">
