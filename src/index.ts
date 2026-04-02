@@ -19,7 +19,6 @@ function getStatusMessages(): { name: string; type: ActivityType }[] {
         { name: `${serverCount} servers`, type: ActivityType.Watching },
         { name: `${memberCount.toLocaleString()} users`, type: ActivityType.Watching },
         { name: '/search for torrents', type: ActivityType.Listening },
-        { name: 'vivitorr.vercel.app', type: ActivityType.Playing },
         { name: 'movies & TV shows', type: ActivityType.Streaming },
     ];
 }
