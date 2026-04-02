@@ -176,13 +176,8 @@ export function createCreditsEmbed(): EmbedBuilder {
         .setDescription('A simple bot that helps you search torrents for content quickly. Just type ``/search`` command to begin')
         .addFields(
             {
-                name: '🤓 Creator & Developer',
-                value: '[@rishabnotfound](https://discord.com/users/1141729666160402565) (10/10 btw)',
-                inline: true
-            },
-            {
-                name: '🤯 Inspiration & Helper',
-                value: '[@toonarch](https://discord.com/users/712521210302300161) (likes uni cat)',
+                name: '🤯 Team',
+                value: '[@rishabnotfound](https://github.com/rishabnotfound) (creator)\n [@toon-arch](https://github.com/Toon-arch) (inspiration & helper)',
                 inline: true
             },
             {
