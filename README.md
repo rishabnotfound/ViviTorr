@@ -14,7 +14,7 @@
   <br />
 <a href="https://discord.com/oauth2/authorize?client_id=1488227820097507588&permissions=4503876652886080&integration_type=0&scope=bot+applications.commands">👉 Invite Bot 👈</a>
   <br />
-<a href="https://vivitorr.vercel.app">🌐 Website</a>
+<a href="https://vivitorr.vercel.app">Website</a>
 </p>
 
 ## Preview
