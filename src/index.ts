@@ -17,9 +17,8 @@ function getStatusMessages(): { name: string; type: ActivityType }[] {
 
     return [
         { name: `${serverCount} servers`, type: ActivityType.Watching },
-        { name: `${memberCount.toLocaleString()} users`, type: ActivityType.Watching },
-        { name: '/search for torrents', type: ActivityType.Listening },
-        { name: 'movies & TV shows', type: ActivityType.Streaming },
+        { name: `${memberCount.toLocaleString()} Members`, type: ActivityType.Watching },
+        { name: '/search for torrents', type: ActivityType.Listening }, 
     ];
 }
 
