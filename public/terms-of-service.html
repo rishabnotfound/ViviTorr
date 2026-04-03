@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - ViviTorr</title>
+    <meta name="description" content="Terms of Service for ViviTorr Discord Bot">
+    <meta name="theme-color" content="#5DADE2">
+    <link rel="icon" href="./logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #5DADE2;
+            --primary-dark: #3498db;
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --text: #ffffff;
+            --text-muted: #8892a0;
+            --border: #1e1e2e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at top, rgba(93, 173, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(93, 173, 226, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        .logo span {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        ul {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 24px;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <div class="container">
+        <a href="/" class="logo">
+            <img src="./logo.png" alt="ViviTorr">
+            <span>ViviTorr</span>
+        </a>
+
+        <h1>Terms of Service</h1>
+        <p class="last-updated">Last updated: April 2026</p>
+
+        <div class="content">
+            <h2>1. Acceptance of Terms</h2>
+            <p>By using ViviTorr ("the Bot"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Bot.</p>
+
+            <h2>2. Description of Service</h2>
+            <p>ViviTorr is a Discord bot that aggregates publicly available torrent information from third-party indexers. The Bot provides:</p>
+            <ul>
+                <li>Search functionality for movies and TV shows using TMDB metadata</li>
+                <li>Aggregated torrent information from sources including Torrentio, Comet, StremThru, and PirateBay+</li>
+                <li>Magnet link generation for peer-to-peer file sharing</li>
+            </ul>
+
+            <h2>3. No Hosting or Storage</h2>
+            <p>ViviTorr does not host, store, upload, or distribute any copyrighted content, torrent files, or media files. The Bot only aggregates and displays publicly available information from third-party sources. We act solely as a search interface.</p>
+
+            <h2>4. User Responsibilities</h2>
+            <p>By using ViviTorr, you agree to:</p>
+            <ul>
+                <li>Use the Bot in compliance with all applicable laws in your jurisdiction</li>
+                <li>Not use the Bot for any illegal activities</li>
+                <li>Take full responsibility for any content you access through magnet links</li>
+                <li>Respect Discord's Terms of Service and Community Guidelines</li>
+                <li>Not abuse, exploit, or attempt to manipulate the Bot's functionality</li>
+            </ul>
+
+            <h2>5. Disclaimer of Liability</h2>
+            <p>ViviTorr and its developers are not responsible for:</p>
+            <ul>
+                <li>The content, accuracy, or legality of information provided by third-party indexers</li>
+                <li>Any damages resulting from the use of magnet links or downloaded content</li>
+                <li>Any legal consequences arising from your use of the Bot</li>
+                <li>Service interruptions, errors, or data loss</li>
+            </ul>
+
+            <h2>6. Third-Party Services</h2>
+            <p>The Bot relies on third-party services including:</p>
+            <ul>
+                <li>The Movie Database (TMDB) for metadata</li>
+                <li>Various torrent indexers for torrent information</li>
+                <li>Discord for bot functionality</li>
+            </ul>
+            <p>We are not affiliated with these services and are not responsible for their availability or content.</p>
+
+            <h2>7. Intellectual Property</h2>
+            <p>ViviTorr is open-source software. The Bot's source code is available on <a href="https://github.com/rishabnotfound/ViviTorr" target="_blank">GitHub</a>. We do not claim ownership of any content accessed through the Bot.</p>
+
+            <h2>8. Modifications</h2>
+            <p>We reserve the right to modify these Terms of Service at any time. Continued use of the Bot after changes constitutes acceptance of the new terms.</p>
+
+            <h2>9. Termination</h2>
+            <p>We reserve the right to terminate or restrict access to the Bot for any user who violates these terms or uses the Bot inappropriately.</p>
+
+            <h2>10. Contact</h2>
+            <p>For questions about these Terms of Service, please contact us through our <a href="mailto:contact@rishab.cv" target="_blank">contact@rishab.cv</a></p>
+        </div>
+
+        <div class="footer">
+            <p><a href="/">Home</a> · <a href="/privacy-policy.html">Privacy Policy</a> · <a href="https://github.com/rishabnotfound/ViviTorr" target="_blank">GitHub</a></p>
+        </div>
+    </div>
+</body>
+</html>
